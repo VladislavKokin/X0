@@ -18,7 +18,6 @@ export const GameLayout = ({field,
         field={field}
         currentPlayer={currentPlayer}
         isGameEnded={isGameEnded}
-
       />
       <div className="onRestart">
         <button onClick={onRestart}>Начать заново</button>

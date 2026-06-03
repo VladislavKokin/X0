@@ -1,7 +1,7 @@
 import "../styles.modules.css"
 
 export const InformationLayout = ({ currentPlayer, isGameEnded, isDraw }) => {
-    let resultGame = "";
+    let resultGame;
 
     if (isDraw) {
         resultGame = "Ничья";

@@ -1,16 +1,15 @@
-import { useEffect, useState } from 'react'
 import { GameLayout } from "./GameLayout";
-import { store } from '../Redux/store'
+import { useSelector, useDispatch } from 'react-redux';
+import { ActionTypes } from '../Redux/reducer';
 
 
 export const Game = () => {
-  const [state, setState] = useState(() => store.getState())
-  useEffect(() => {
-    return store.subscribe(() => {
-      setState(store.getState())
-    })
-  }, [])
-  const { field, currentPlayer, isGameEnded, isDraw } = state
+  const field = useSelector(state => state.field);
+  const currentPlayer = useSelector(state => state.currentPlayer);
+  const isGameEnded = useSelector(state => state.isGameEnded);
+  const isDraw = useSelector(state => state.isDraw);
+
+  const dispatch = useDispatch();
 
   return (
     <GameLayout
@@ -18,7 +17,7 @@ export const Game = () => {
       currentPlayer={currentPlayer}
       isGameEnded={isGameEnded}
       isDraw={isDraw}
-      onRestart={() => store.dispatch({ type: 'RESTART_GAME' })}
+      onRestart={() => dispatch({ type: ActionTypes.RESTART_GAME })}
     />
   );
 }
