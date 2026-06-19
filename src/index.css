@@ -1,0 +1,10 @@
+:root {
+    --accent-color-hue: 240;
+    --accent-color-saturation: 50%;
+    --surface-light: hsl(240 24% 28%);
+    --surface: hsl(240 28% 18%);
+    --text: hsl(240 24% 95%);
+    --accent-glow: hsl(198 100% 55%);
+    --disabled-color: hsl(240 18% 50%);
+  }
+  

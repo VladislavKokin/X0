@@ -1,23 +1,37 @@
+import { Component } from "react";
 import { GameLayout } from "./GameLayout";
-import { useSelector, useDispatch } from 'react-redux';
+import { legacy_connect as connect } from 'react-redux';
 import { ActionTypes } from '../Redux/reducer';
 
 
-export const Game = () => {
-  const field = useSelector(state => state.field);
-  const currentPlayer = useSelector(state => state.currentPlayer);
-  const isGameEnded = useSelector(state => state.isGameEnded);
-  const isDraw = useSelector(state => state.isDraw);
+export class GameContainer extends Component {
+  handleClick = () => {
+    this.props.dispatch({ type: ActionTypes.RESTART_GAME });
+  };
+  render() {
+    const { field, currentPlayer, isGameEnded, isDraw } = this.props;
 
-  const dispatch = useDispatch();
-
-  return (
-    <GameLayout
-      field={field}
-      currentPlayer={currentPlayer}
-      isGameEnded={isGameEnded}
-      isDraw={isDraw}
-      onRestart={() => dispatch({ type: ActionTypes.RESTART_GAME })}
-    />
-  );
+    return (
+      <GameLayout
+        field={field}
+        currentPlayer={currentPlayer}
+        isGameEnded={isGameEnded}
+        isDraw={isDraw}
+        onRestart={this.handleClick}
+      />
+    );
+  }
 }
+
+const mapStateToProps = (state) => ({
+  field: state.field,
+  currentPlayer: state.currentPlayer,
+  isGameEnded: state.isGameEnded,
+  isDraw: state.isDraw,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatch,
+});
+
+export const Game = connect(mapStateToProps, mapDispatchToProps)(GameContainer);

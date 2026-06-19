@@ -1,34 +1,49 @@
+import { Component } from "react";
 import { FieldLayout } from "./FieldLayout";
-import { useDispatch } from "react-redux";
+import { legacy_connect as connect } from 'react-redux';
 import { ActionTypes, checkWinner } from "../Redux/reducer";
 
-export const Field = ({ field, currentPlayer, isGameEnded }) => {
-  const dispatch = useDispatch();
+class FieldContainer extends Component {
+  handleClick = (index) => {
+    if (this.props.isGameEnded || this.props.field[index] !== "") return;
 
-  const handleClick = (index) => {
-    if (isGameEnded || field[index] !== "") return;
+    const newField = [...this.props.field];
+    newField[index] = this.props.currentPlayer;
 
-    const newField = [...field];
-    newField[index] = currentPlayer;
+    this.props.dispatch({ type: ActionTypes.SET_FIELD, payload: newField });
 
-    dispatch({ type: ActionTypes.SET_FIELD, payload: newField });
-
-    if (checkWinner(newField, currentPlayer)) {
-      dispatch({ type: ActionTypes.SET_IS_GAME_ENDED, payload: true });
+    if (checkWinner(newField, this.props.currentPlayer)) {
+      this.props.dispatch({ type: ActionTypes.SET_IS_GAME_ENDED, payload: true });
       return;
     }
 
     if (!newField.includes("")) {
-      dispatch({ type: ActionTypes.SET_IS_DRAW, payload: true });
-      dispatch({ type: ActionTypes.SET_IS_GAME_ENDED, payload: true });
+      this.props.dispatch({ type: ActionTypes.SET_IS_DRAW, payload: true });
+      this.props.dispatch({ type: ActionTypes.SET_IS_GAME_ENDED, payload: true });
       return;
     }
 
-    const nextPlayer = currentPlayer === "X" ? "0" : "X";
-    dispatch({ type: ActionTypes.SET_CURRENT_PLAYER, payload: nextPlayer });
+    const nextPlayer = this.props.currentPlayer === "X" ? "0" : "X";
+    this.props.dispatch({ type: ActionTypes.SET_CURRENT_PLAYER, payload: nextPlayer });
   };
 
-  return (
-    <FieldLayout field={field} onItemClick={handleClick} isGameEnded={isGameEnded}/>
-  );
-};
+  render() {
+    const { field, isGameEnded } = this.props;
+
+    return (
+      <FieldLayout field={field} onItemClick={this.handleClick} isGameEnded={isGameEnded} />
+    );
+  }
+}
+
+const mapStateToProps = (state) => ({
+  field: state.field,
+  currentPlayer: state.currentPlayer,
+  isGameEnded: state.isGameEnded,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatch,
+});
+
+export const Field = connect(mapStateToProps, mapDispatchToProps)(FieldContainer);
